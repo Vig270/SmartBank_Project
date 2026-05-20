@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>GeniusBank Dashboard</title>
+    <script>
+        {% if user %}
+            let user = {{ user|tojson }};
+        {% else %}
+            let user = {id:null, name:"Guest", balance:0, plan:"FREE"};
+        {% endif %}
+
+        function updateBalance() {
+            document.getElementById("balance").innerText =
+                "Balance: $" + user.balance + " | Plan: " + user.plan;
+        }
+
+        async function deposit() {
+            let amount = parseFloat(prompt("Enter amount to deposit:"));
+            if (!amount || amount <= 0) return;
+            let res = await fetch("/deposit", {
+                method: "POST",
+                headers: {"Content-Type":"application/json"},
+                body: JSON.stringify({user_id:user.id, amount:amount})
+            });
+            let data = await res.json();
+            if (data.status=="success") {
+                user.balance = data.balance;
+                updateBalance();
+                alert(data.message);
+            } else alert(data.message);
+        }
+
+        async function withdraw() {
+            let amount = parseFloat(prompt("Enter amount to withdraw:"));
+            if (!amount || amount <= 0) return;
+            let res = await fetch("/withdraw", {
+                method: "POST",
+                headers: {"Content-Type":"application/json"},
+                body: JSON.stringify({user_id:user.id, amount:amount})
+            });
+            let data = await res.json();
+            if (data.status=="success") {
+                user.balance = data.balance;
+                updateBalance();
+                alert(data.message);
+            } else alert(data.message);
+        }
+
+        async function upgrade() {
+            let res = await fetch("/upgrade_pro", {
+                method: "POST",
+                headers: {"Content-Type":"application/json"},
+                body: JSON.stringify({user_id:user.id})
+            });
+            let data = await res.json();
+            if (data.status=="success") {
+                user.plan = "PRO";
+                updateBalance();
+                alert(data.message);
+            } else alert(data.message);
+        }
+
+        async function downgrade() {
+            let res = await fetch("/downgrade_pro", {
+                method: "POST",
+                headers: {"Content-Type":"application/json"},
+                body: JSON.stringify({user_id:user.id})
+            });
+            let data = await res.json();
+            if (data.status=="success") {
+                user.plan = "FREE";
+                updateBalance();
+                alert(data.message);
+            } else alert(data.message);
+        }
+
+        function logout() {
+            window.location.href = "/logout";
+        }
+    </script>
+</head>
+<body onload="updateBalance()">
+    <h1>Welcome, {{ user.name if user else "Guest" }}</h1>
+    <h2 id="balance"></h2>
+<h1>Welcome, {{ user.name }}</h1>
+<h2 id="balance"></h2>
+
+    <button onclick="deposit()">Deposit</button>
+    <button onclick="withdraw()">Withdraw</button>
+    <button onclick="upgrade()">Upgrade PRO</button>
+    <button onclick="downgrade()">Downgrade FREE</button>
+<button onclick="logout()">Logout</button>
+</body>
+</html>

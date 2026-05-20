@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>GeniusBank Login</title>
+
+<style>
+
+body{
+    font-family: Arial;
+    background:#f4f6f9;
+    text-align:center;
+    margin-top:120px;
+}
+
+.container{
+    background:white;
+    width:420px;
+    margin:auto;
+    padding:40px;
+    border-radius:10px;
+    box-shadow:0px 5px 20px rgba(0,0,0,0.15);
+}
+
+input{
+    width:80%;
+    padding:12px;
+    margin-top:10px;
+}
+
+button{
+    padding:12px 25px;
+    margin-top:15px;
+    cursor:pointer;
+}
+
+.github{
+    background:black;
+    color:white;
+}
+
+.login{
+    background:#1976d2;
+    color:white;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>GeniusBank</h1>
+
+<h3>Login</h3>
+
+<form action="/login_local" method="POST">
+
+<input type="text" name="username" placeholder="Username" required>
+<br>
+
+<input type="password" name="password" placeholder="Password" required>
+<br>
+
+<button class="login">Login</button>
+
+</form>
+
+<hr>
+
+<p>Or login with</p>
+
+<a href="/login/github">
+    <button class="github">Continue with GitHub</button>
+</a>
+
+
+<p>Don't have an account?</p>
+
+<a href="/register_page">
+<button type="button">Register</button>
+</a>
+
+</div>
+
+</body>
+</html>
